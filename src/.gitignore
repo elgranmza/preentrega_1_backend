@@ -1,0 +1,9 @@
+/dist/              # Directorio de archivos construidos (build)
+/build/             # Otro directorio de archivos construidos
+/node_modules/      # Directorio de dependencias de Node.js
+/bower_components/  # Directorio de dependencias de Bower
+
+.DS_Store           # Archivo de sistema de macOS
+Thumbs.db           # Archivo de sistema de Windows
+.idea/              # Directorio de configuración de IntelliJ IDEA
+.vscode/            # Directorio de configuración de Visual Studio Code
