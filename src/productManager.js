@@ -61,6 +61,9 @@ class ProductManager {
         if (productIndex === -1) {
             throw new Error("Producto no encontrado");
         }
+
+        delete updatedData.id;
+
         this.products[productIndex] = { ...this.products[productIndex], ...updatedData };
         this.saveProducts();
     }
