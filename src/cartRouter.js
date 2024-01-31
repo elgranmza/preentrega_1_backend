@@ -5,10 +5,19 @@ const cartRouter = express.Router();
 
 const CARTS_FILE_PATH = './carts.json';
 
+function generateCartId() {
+    try {
+        const cartsData = fs.readFileSync(CARTS_FILE_PATH, 'utf-8');
+        const carts = JSON.parse(cartsData);
+        return carts.length > 0 ? carts[carts.length - 1].id + 1 : 1;
+    } catch (error) {
+        return 1; 
+    }
+}
 
 cartRouter.post('/', (req, res) => {
     try {
-        const cartId = generateUniqueId();
+        const cartId = generateCartId();
         const newCart = {
             id: cartId,
             products: []
@@ -20,7 +29,6 @@ cartRouter.post('/', (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 cartRouter.get('/:cid', (req, res) => {
     try {
@@ -36,7 +44,6 @@ cartRouter.get('/:cid', (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 cartRouter.post('/:cid/product/:pid', (req, res) => {
     try {
@@ -66,15 +73,9 @@ cartRouter.post('/:cid/product/:pid', (req, res) => {
 });
 
 
-function generateUniqueId() {
-    return Date.now().toString(); 
-}
-
-
 function saveCart(cart) {
     fs.writeFileSync(CARTS_FILE_PATH, JSON.stringify(cart, null, 2));
 }
-
 
 function getCartById(cartId) {
     try {
