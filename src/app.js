@@ -1,6 +1,6 @@
 const express = require('express');
 const ProductManager = require('./productManager');
-const CartManager = require('./CartManager'); 
+const CartManager = require('./CartManager');
 const productsRouter = require('./productRouter');
 const cartRouter = require('./cartRouter');
 
@@ -8,8 +8,6 @@ const app = express();
 const port = 8080;
 
 const productManager = new ProductManager('./products.json');
-
-const productsRouter = express.Router();
 
 productsRouter.get('/', async (req, res) => {
     try {
@@ -40,11 +38,16 @@ productsRouter.get('/:pid', async (req, res) => {
 app.use('/products', productsRouter);
 app.use('/carts', cartRouter);
 
-// Manejo de errores global
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong!');
 });
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
