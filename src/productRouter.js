@@ -1,10 +1,9 @@
 const express = require('express');
 const ProductManager = require('./productManager');
-const { v4: uuidv4 } = require('uuid');
 
 const productsRouter = express.Router();
 const productManager = new ProductManager('./products.json');
-
+let lastProductId = 0; 
 productsRouter.get('/', async (req, res) => {
     try {
         const limit = req.query.limit;
@@ -38,7 +37,7 @@ productsRouter.post('/', async (req, res) => {
             throw new Error("Todos los campos del producto son obligatorios, excepto thumbnails");
         }
         const newProduct = {
-            id: uuidv4(),
+            id: ++lastProductId, 
             title,
             description,
             code,

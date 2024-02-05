@@ -4,6 +4,7 @@ class ProductManager {
     constructor(filePath) {
         this.path = filePath;
         this.products = this.loadProducts();
+        this.lastProductId = this.calculateLastProductId();
     }
 
     loadProducts() {
@@ -20,6 +21,13 @@ class ProductManager {
         fs.writeFileSync(this.path, data);
     }
 
+    calculateLastProductId() {
+        if (this.products.length === 0) {
+            return 0;
+        }
+        return this.products[this.products.length - 1].id;
+    }
+
     addProduct(title, description, price, thumbnail, code, stock) {
         if (!title || !description || !price || !thumbnail || !code || !stock) {
             throw new Error("Todos los campos del producto son obligatorios");
@@ -27,8 +35,8 @@ class ProductManager {
         if (this.products.find((p) => p.code === code)) {
             throw new Error("El código del producto ya existe");
         }
-        const product = {
-            id: this.products.length + 1,
+        const newProduct = {
+            id: ++this.lastProductId,
             title,
             description,
             price,
@@ -36,7 +44,7 @@ class ProductManager {
             code,
             stock,
         };
-        this.products.push(product);
+        this.products.push(newProduct);
         this.saveProducts();
     }
 
@@ -48,7 +56,7 @@ class ProductManager {
     }
 
     getProductById(id) {
-        const product = this.products.find((p) => p.id == id);
+        const product = this.products.find((p) => p.id === id);
         if (!product) {
             console.log("Not found");
             return null;
