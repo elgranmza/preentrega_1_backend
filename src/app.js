@@ -7,6 +7,10 @@ const cartRouter = require('./cartRouter');
 const app = express();
 const port = 8080;
 
+// Agregar middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const productManager = new ProductManager('./products.json');
 
 productsRouter.get('/', async (req, res) => {
@@ -34,16 +38,23 @@ productsRouter.get('/:pid', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+// Crear una instancia de CartManager
+const cartManager = new CartManager('./carts.json');
 
-app.use('/products', productsRouter);
-app.use('/carts', cartRouter);
-
-
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+// Ruta para crear un nuevo carrito
+app.post('/carts', async (req, res) => {
+    try {
+        const newCart = await cartManager.createCart();
+        res.json(newCart);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
+app.use('/products', productsRouter);
+app.use('/cart', cartRouter);
+
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Servidor iniciado en el puerto ${port}`);
 });
